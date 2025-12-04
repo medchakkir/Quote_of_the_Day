@@ -24,7 +24,7 @@ An automated email service that sends an inspirational quote every Sunday to hel
 1. Clone this repository:
 
 ```bash
-git clone https://github.com/momed-ali01/Quote_of_the_Week.git
+git clone https://github.com/<username>/Quote_of_the_Week.git
 cd Quote_of_the_Week
 ```
 
