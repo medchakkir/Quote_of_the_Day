@@ -1,7 +1,17 @@
 import os
+import logging
 import smtplib
 import requests
 from dotenv import load_dotenv
+
+# Configure logging
+logging.basicConfig(
+    filename='quote_of_the_day.log',
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
+
+logger = logging.getLogger(__name__)
 
 # Load environment variables
 load_dotenv()
@@ -38,16 +48,16 @@ try:
     response.raise_for_status()
     quote_data = response.json()
 except requests.exceptions.RequestException as e:
-    print(f"Error fetching quotes from API: {e}")
+    logger.error(f"Error fetching quotes from API: {e}")
     exit(1)
 except ValueError as e:
-    print(f"Error parsing JSON response: {e}")
+    logger.error(f"Error parsing JSON response: {e}")
     exit(1)
 
 # Print quote
 quote = quote_data[0]["quote"]
 author = quote_data[0]["author"]
-print(f"{quote} - {author}")
+logger.info(f"{quote} - {author}")
 
 # Send Email
 try:
@@ -60,11 +70,11 @@ try:
             msg=f"Subject: Quote of the Day\n\n{quote} - {author}"
         )
 except smtplib.SMTPAuthenticationError as e:
-    print(f"SMTP authentication failed: {e}")
+    logger.error(f"SMTP authentication failed: {e}")
     exit(1)
 except smtplib.SMTPException as e:
-    print(f"SMTP error occurred: {e}")
+    logger.error(f"SMTP error occurred: {e}")
     exit(1)
 except Exception as e:
-    print(f"Unexpected error sending email: {e}")
+    logger.error(f"Unexpected error sending email: {e}")
     exit(1)
